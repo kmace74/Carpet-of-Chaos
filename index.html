@@ -63,6 +63,74 @@
   .final-score { font-family: 'Reem Kufi Fun', sans-serif; font-size: 20px; color: #d4a853; letter-spacing: 4px; }
   #powerUpNotif { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cinzel Decorative', serif; font-size: 28px; color: #2ecc71; text-shadow: 0 0 30px #2ecc7166; z-index: 120; pointer-events: none; opacity: 0; transition: opacity 0.3s, transform 0.3s; }
   #powerUpNotif.active { opacity: 1; transform: translate(-50%, -70%); }
+
+  /* ── MOBILE TOUCH CONTROLS ── */
+  #touchControls { display: none; position: fixed; inset: 0; z-index: 90; pointer-events: none; }
+  #touchControls.active { display: block; }
+
+  .touch-joystick-area {
+    position: absolute; bottom: 20px; left: 20px; width: 160px; height: 160px;
+    pointer-events: auto; touch-action: none;
+  }
+  .touch-joystick-base {
+    position: absolute; inset: 0; border: 2px solid #f4c54244;
+    border-radius: 50%; background: #f4c54208;
+  }
+  .touch-joystick-knob {
+    position: absolute; width: 60px; height: 60px;
+    left: 50px; top: 50px;
+    border-radius: 50%; background: radial-gradient(circle, #f4c54266, #f4c54222);
+    border: 2px solid #f4c54288; transition: none;
+  }
+
+  .touch-btn-area {
+    position: absolute; bottom: 20px; right: 20px;
+    display: flex; gap: 10px; flex-wrap: wrap; width: 180px; justify-content: flex-end;
+    pointer-events: auto; touch-action: none;
+  }
+  .touch-btn {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 2px solid #f4c54266; background: #f4c54211;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Reem Kufi Fun', sans-serif; font-size: 11px;
+    color: #f4c542; text-align: center; line-height: 1.1;
+    user-select: none; -webkit-user-select: none;
+  }
+  .touch-btn.fire-btn {
+    width: 80px; height: 80px; border-color: #44ddaa66; background: #44ddaa15;
+    color: #44ddaa; font-size: 13px;
+  }
+  .touch-btn.fire-btn.pressed { background: #44ddaa33; border-color: #44ddaaaa; }
+  .touch-btn.pressed { background: #f4c54233; border-color: #f4c542aa; }
+
+  .touch-top-btns {
+    position: absolute; top: 70px; right: 20px;
+    display: flex; gap: 8px; pointer-events: auto; touch-action: none;
+  }
+  .touch-btn-sm {
+    width: 48px; height: 48px; border-radius: 12px;
+    border: 1px solid #f4c54244; background: #f4c54208;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #f4c54288;
+    font-family: 'Reem Kufi Fun', sans-serif;
+    user-select: none; -webkit-user-select: none;
+    pointer-events: auto; touch-action: none;
+  }
+  .touch-btn-sm.pressed { background: #f4c54222; border-color: #f4c54288; }
+
+  /* Mobile HUD adjustments */
+  body.mobile-mode { cursor: auto; }
+  body.mobile-mode .game-cursor { display: none; }
+  body.mobile-mode #hud { padding: 8px 12px; }
+  body.mobile-mode .hud-label { font-size: 8px; letter-spacing: 2px; }
+  body.mobile-mode .hud-value { font-size: 16px; }
+  body.mobile-mode .hud-score { font-size: 20px; }
+  body.mobile-mode .health-bar-container { width: 120px; height: 8px; }
+  body.mobile-mode .pigeon-meter-container { width: 100px; height: 7px; }
+  body.mobile-mode .boss-bar-container { bottom: 100px; width: 280px; }
+  body.mobile-mode #powerUpNotif { font-size: 20px; }
+  body.mobile-mode .menu-btn { padding: 10px 32px; font-size: 16px; }
+
 </style>
 </head>
 <body>
@@ -86,7 +154,7 @@
   </div>
 </div>
 <div class="boss-bar-container" id="bossBar"><div class="boss-name" id="bossName">THE TEA MERCHANT</div><div class="boss-bar-outer"><div class="boss-bar-inner" id="bossHealthBar"></div></div></div>
-<div class="menu-overlay" id="mainMenu"><div class="menu-title">MAZA BABA</div><div class="menu-subtitle">Carpet of Chaos</div><div class="menu-buttons"><button class="menu-btn" onclick="Game.startGame()">Start Game</button><button class="menu-btn" onclick="UI.showPanel('controlsPanel')">Controls</button><button class="menu-btn" onclick="UI.showPanel('creditsPanel')">Credits</button></div></div>
+<div class="menu-overlay" id="mainMenu"><div class="menu-title">MAZA BABA</div><div class="menu-subtitle">Carpet of Chaos</div><div class="menu-buttons"><button class="menu-btn" onclick="Game.startGame(false)">🖥️ Desktop</button><button class="menu-btn" onclick="Game.startGame(true)">📱 Mobile</button><button class="menu-btn" onclick="UI.showPanel('controlsPanel')">Controls</button><button class="menu-btn" onclick="UI.showPanel('creditsPanel')">Credits</button></div></div>
 <div class="info-panel" id="controlsPanel"><div class="info-content"><h2>Controls</h2><p><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> or Arrows — Move</p><p><span class="key">Space</span> — Fire Prayer Beads</p><p><span class="key">Shift</span> — Speed Boost</p><p><span class="key">Q</span> — Release Pigeon Flock (when charged)</p><p><span class="key">E</span> — Activate Stored Power-Up</p><p><span class="key">Esc</span> — Pause</p><br><p style="color:#f4c542">🎮 Gamepad: LStick move | RT fire | A boost | LB pigeons | Y activate</p><br><p style="color:#88bbff">🕊️ Pigeon Flock — Collect feathers, press Q when full</p><p style="color:#ff8800">💎 Rare Power-Ups — Stored for later! Press E to use:</p><p style="color:#ff4466">❤️ Heal · 💥 Mega Beam · ⏳ Time Slow · 💚 Extra Life · 🔥 Rapid Fire</p><button class="close-btn" onclick="UI.hidePanel('controlsPanel')">Close</button></div></div>
 <div class="info-panel" id="creditsPanel"><div class="info-content"><h2>Credits</h2><p style="color:#f4c542; font-size:18px">MAZA BABA: Carpet of Chaos</p><p>A legendary hero soars through chaos on a magic carpet, armed with holy prayer beads and a flock of loyal pigeons.</p><button class="close-btn" onclick="UI.hidePanel('creditsPanel')">Close</button></div></div>
 <div id="pauseOverlay"><div style="text-align:center"><div class="menu-title" style="font-size:40px; margin-bottom:30px">Paused</div><div class="menu-buttons"><button class="menu-btn" onclick="Game.resume()">Resume</button><button class="menu-btn" onclick="Game.restartLevel()">Restart Level</button><button class="menu-btn" onclick="Game.exitToMenu()">Exit to Menu</button></div></div></div>
@@ -94,6 +162,24 @@
 <div id="gameOverScreen"><div class="game-over-text">DEFEATED</div><div class="final-score" id="goScore">Score: 0</div><div class="menu-buttons" style="margin-top:20px"><button class="menu-btn" onclick="Game.restartLevel()">Try Again</button><button class="menu-btn" onclick="Game.exitToMenu()">Main Menu</button></div></div>
 <div id="victoryScreen"><div class="victory-text">VICTORY!</div><div class="final-score" id="vicScore">Final Score: 0</div><div class="menu-buttons" style="margin-top:20px"><button class="menu-btn" onclick="Game.exitToMenu()">Main Menu</button></div></div>
 <div id="powerUpNotif"></div>
+
+<!-- Touch Controls (mobile) -->
+<div id="touchControls">
+  <div class="touch-joystick-area" id="joystickArea">
+    <div class="touch-joystick-base"></div>
+    <div class="touch-joystick-knob" id="joystickKnob"></div>
+  </div>
+  <div class="touch-btn-area">
+    <div class="touch-btn" id="btnPigeon" data-action="pigeon">🕊️<br>Flock</div>
+    <div class="touch-btn" id="btnActivate" data-action="activate">💎<br>Use</div>
+    <div class="touch-btn" id="btnBoost" data-action="boost">⚡<br>Boost</div>
+    <div class="touch-btn fire-btn" id="btnFire" data-action="fire">🔮<br>FIRE</div>
+  </div>
+  <div class="touch-top-btns">
+    <div class="touch-btn-sm" id="btnPause" data-action="pause">⏸️</div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════
@@ -129,8 +215,128 @@ const Input=(()=>{const keys={};const gp={axes:[0,0],fire:false,boost:false,pige
     if(g.buttons[14]&&g.buttons[14].pressed)gp.axes[0]=-1;
     if(g.buttons[15]&&g.buttons[15].pressed)gp.axes[0]=1;
   }
-  function getAxes(){let x=0,y=0;if(keys.KeyA||keys.ArrowLeft)x-=1;if(keys.KeyD||keys.ArrowRight)x+=1;if(keys.KeyW||keys.ArrowUp)y+=1;if(keys.KeyS||keys.ArrowDown)y-=1;if(Math.abs(gp.axes[0])>.15)x=gp.axes[0];if(Math.abs(gp.axes[1])>.15)y=-gp.axes[1];return{x,y}}
-  return{pollGamepad,getAxes,isFire:()=>keys.Space||gp.fire,isBoost:()=>keys.ShiftLeft||keys.ShiftRight||gp.boost,isPigeon:()=>keys.KeyQ||gp.pigeon,isActivate:()=>keys.KeyE||gp.activate,isPause:()=>keys.Escape,consumePause:()=>{keys.Escape=false},consumePigeon:()=>{keys.KeyQ=false},consumeActivate:()=>{keys.KeyE=false},keys}})();
+  function getAxes(){let x=0,y=0;if(keys.KeyA||keys.ArrowLeft)x-=1;if(keys.KeyD||keys.ArrowRight)x+=1;if(keys.KeyW||keys.ArrowUp)y+=1;if(keys.KeyS||keys.ArrowDown)y-=1;if(Math.abs(gp.axes[0])>.15)x=gp.axes[0];if(Math.abs(gp.axes[1])>.15)y=-gp.axes[1];if(typeof Touch!=='undefined'&&Touch.enabled){if(Math.abs(Touch.joyX)>.1)x=Touch.joyX;if(Math.abs(Touch.joyY)>.1)y=Touch.joyY}return{x,y}}
+  return{pollGamepad,getAxes,isFire:()=>keys.Space||gp.fire||Touch.fire,isBoost:()=>keys.ShiftLeft||keys.ShiftRight||gp.boost||Touch.boost,isPigeon:()=>keys.KeyQ||gp.pigeon||Touch.pigeon,isActivate:()=>keys.KeyE||gp.activate||Touch.activate,isPause:()=>keys.Escape||Touch.pause,consumePause:()=>{keys.Escape=false;Touch.pause=false},consumePigeon:()=>{keys.KeyQ=false;Touch.pigeon=false},consumeActivate:()=>{keys.KeyE=false;Touch.activate=false},keys}})();
+
+/* ── TOUCH CONTROLS ── */
+const Touch=(()=>{
+  let enabled=false;
+  const state={fire:false,boost:false,pigeon:false,activate:false,pause:false,joyX:0,joyY:0};
+  let joystickTouchId=null;
+  let joyBaseX=0,joyBaseY=0;
+  const JOY_RADIUS=60;
+
+  function enable(){
+    enabled=true;
+    document.body.classList.add('mobile-mode');
+    document.getElementById('touchControls').classList.add('active');
+    setupJoystick();
+    setupButtons();
+  }
+  function disable(){
+    enabled=false;
+    document.body.classList.remove('mobile-mode');
+    document.getElementById('touchControls').classList.remove('active');
+  }
+
+  function setupJoystick(){
+    const area=document.getElementById('joystickArea');
+    const knob=document.getElementById('joystickKnob');
+
+    area.addEventListener('touchstart',e=>{
+      e.preventDefault();
+      const t=e.changedTouches[0];
+      joystickTouchId=t.identifier;
+      const rect=area.getBoundingClientRect();
+      joyBaseX=rect.left+rect.width/2;
+      joyBaseY=rect.top+rect.height/2;
+      updateJoystick(t.clientX,t.clientY,knob);
+    },{passive:false});
+
+    area.addEventListener('touchmove',e=>{
+      e.preventDefault();
+      for(let i=0;i<e.changedTouches.length;i++){
+        if(e.changedTouches[i].identifier===joystickTouchId){
+          updateJoystick(e.changedTouches[i].clientX,e.changedTouches[i].clientY,knob);
+        }
+      }
+    },{passive:false});
+
+    const endJoy=e=>{
+      for(let i=0;i<e.changedTouches.length;i++){
+        if(e.changedTouches[i].identifier===joystickTouchId){
+          joystickTouchId=null;
+          state.joyX=0;state.joyY=0;
+          knob.style.left='50px';knob.style.top='50px';
+        }
+      }
+    };
+    area.addEventListener('touchend',endJoy);
+    area.addEventListener('touchcancel',endJoy);
+  }
+
+  function updateJoystick(cx,cy,knob){
+    let dx=cx-joyBaseX;
+    let dy=cy-joyBaseY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist>JOY_RADIUS){dx=dx/dist*JOY_RADIUS;dy=dy/dist*JOY_RADIUS}
+    state.joyX=dx/JOY_RADIUS;
+    state.joyY=-dy/JOY_RADIUS; // invert Y
+    knob.style.left=(50+dx)+'px';
+    knob.style.top=(50+dy)+'px';
+  }
+
+  function setupButtons(){
+    // Fire button — hold to auto-fire
+    const fireBtn=document.getElementById('btnFire');
+    fireBtn.addEventListener('touchstart',e=>{e.preventDefault();state.fire=true;fireBtn.classList.add('pressed')},{passive:false});
+    fireBtn.addEventListener('touchend',e=>{state.fire=false;fireBtn.classList.remove('pressed')});
+    fireBtn.addEventListener('touchcancel',e=>{state.fire=false;fireBtn.classList.remove('pressed')});
+
+    // Other buttons — tap to trigger
+    ['boost','pigeon','activate','pause'].forEach(action=>{
+      const btn=document.querySelector(`[data-action="${action}"]`);
+      if(!btn)return;
+      let holdInterval=null;
+      btn.addEventListener('touchstart',e=>{
+        e.preventDefault();
+        state[action]=true;
+        btn.classList.add('pressed');
+        // Boost is hold-based
+        if(action==='boost'){
+          holdInterval=true;
+        }
+      },{passive:false});
+      btn.addEventListener('touchend',e=>{
+        if(action!=='boost')setTimeout(()=>{state[action]=false},100); // brief pulse
+        else state[action]=false;
+        btn.classList.remove('pressed');
+        holdInterval=null;
+      });
+      btn.addEventListener('touchcancel',e=>{
+        state[action]=false;
+        btn.classList.remove('pressed');
+        holdInterval=null;
+      });
+    });
+  }
+
+  // Expose state as properties so Input can read them
+  return{
+    get fire(){return state.fire},
+    get boost(){return state.boost},
+    get pigeon(){return state.pigeon},
+    get activate(){return state.activate},
+    get pause(){return state.pause},
+    set pause(v){state.pause=v},
+    set pigeon(v){state.pigeon=v},
+    set activate(v){state.activate=v},
+    get joyX(){return state.joyX},
+    get joyY(){return state.joyY},
+    get enabled(){return enabled},
+    enable,disable,
+  };
+})();
 
 /* ── UI ── */
 const UI=(()=>{const e=id=>document.getElementById(id);const els={hud:e('hud'),healthBar:e('healthBar'),livesLabel:e('livesLabel'),scoreDisplay:e('scoreDisplay'),levelLabel:e('levelLabel'),powerUpLabel:e('powerUpLabel'),comboLabel:e('comboLabel'),pigeonMeter:e('pigeonMeter'),bossBar:e('bossBar'),bossName:e('bossName'),bossHealthBar:e('bossHealthBar'),mainMenu:e('mainMenu'),pauseOverlay:e('pauseOverlay'),levelIntro:e('levelIntro'),introLevelNum:e('introLevelNum'),introLevelName:e('introLevelName'),introBossName:e('introBossName'),gameOverScreen:e('gameOverScreen'),goScore:e('goScore'),victoryScreen:e('victoryScreen'),vicScore:e('vicScore'),powerUpNotif:e('powerUpNotif')};return{showHUD:()=>els.hud.classList.add('active'),hideHUD:()=>els.hud.classList.remove('active'),updateHealth:p=>els.healthBar.style.width=(p*100)+'%',updateLives:n=>els.livesLabel.textContent='♥ '.repeat(Math.max(0,n)).trim(),updateScore:s=>els.scoreDisplay.textContent=s.toLocaleString(),updateLevel:(n,nm)=>els.levelLabel.textContent=`Level ${n} — ${nm}`,updatePowerUp:t=>els.powerUpLabel.textContent=t||'—',updateCombo:c=>els.comboLabel.textContent=c>1?`x${c} COMBO`:'',updatePigeonMeter:p=>els.pigeonMeter.style.width=(p*100)+'%',showBossBar:(nm,p)=>{els.bossBar.classList.add('active');els.bossName.textContent=nm;els.bossHealthBar.style.width=(p*100)+'%'},updateBossBar:p=>els.bossHealthBar.style.width=(Math.max(0,p)*100)+'%',hideBossBar:()=>els.bossBar.classList.remove('active'),showMenu:()=>els.mainMenu.classList.remove('hidden'),hideMenu:()=>els.mainMenu.classList.add('hidden'),showPause:()=>els.pauseOverlay.classList.add('active'),hidePause:()=>els.pauseOverlay.classList.remove('active'),showLevelIntro:(n,nm,b)=>{els.introLevelNum.textContent=`Level ${n}`;els.introLevelName.textContent=nm;els.introBossName.textContent=`Boss: ${b}`;els.levelIntro.classList.add('active');return new Promise(r=>setTimeout(()=>{els.levelIntro.classList.remove('active');r()},2500))},showGameOver:s=>{els.goScore.textContent=`Score: ${s.toLocaleString()}`;els.gameOverScreen.classList.add('active')},hideGameOver:()=>els.gameOverScreen.classList.remove('active'),showVictory:s=>{els.vicScore.textContent=`Final Score: ${s.toLocaleString()}`;els.victoryScreen.classList.add('active')},hideVictory:()=>els.victoryScreen.classList.remove('active'),showPowerUpNotif:t=>{els.powerUpNotif.textContent=t;els.powerUpNotif.classList.add('active');setTimeout(()=>els.powerUpNotif.classList.remove('active'),1500)},showPanel:id=>document.getElementById(id).classList.add('active'),hidePanel:id=>document.getElementById(id).classList.remove('active')}})();
@@ -817,12 +1023,12 @@ const Waves=(()=>{let cw=0,tw=0,st=0,es=0,epw=0,bs=false,wd=2,li=0,wa=false;
 /* ── GAME MANAGER ── */
 const Game=(()=>{let state='menu',score=0,curLvl=0,speedMult=1;
   function init(){initRenderer();UI.showMenu();scene.background=new THREE.Color(0x0a0500);scene.add(new THREE.AmbientLight(0xf4c542,.3));gameLoop()}
-  async function startGame(){Audio.ensure();score=0;curLvl=0;UI.hideMenu();UI.hideGameOver();UI.hideVictory();await loadLevel(0)}
+  async function startGame(mobile){Audio.ensure();score=0;curLvl=0;if(mobile){Touch.enable()}else{Touch.disable()}UI.hideMenu();UI.hideGameOver();UI.hideVictory();await loadLevel(0)}
   async function loadLevel(i){state='levelIntro';curLvl=i;const ld=LEVELS[i];speedMult=ld.speedMult;while(scene.children.length>0)scene.remove(scene.children[0]);LevelBuilder.build(i);Player.create();Player.resetStats();UI.updateHealth(1);UI.updateLives(Player.getHP().lives);UI.updateScore(score);UI.updateLevel(ld.num,ld.name);UI.hideBossBar();UI.updatePigeonMeter(0);Audio.stopMusic();await UI.showLevelIntro(ld.num,ld.name,ld.bossName);Audio.playMusic(i);Waves.init(i);UI.showHUD();state='playing'}
   function pause(){if(state!=='playing')return;state='paused';UI.showPause()}
   function resume(){if(state!=='paused')return;state='playing';UI.hidePause();Input.consumePause()}
   function restartLevel(){UI.hideGameOver();UI.hidePause();score=Math.max(0,score-1000);loadLevel(curLvl)}
-  function exitToMenu(){state='menu';Audio.stopMusic();UI.hideHUD();UI.hidePause();UI.hideGameOver();UI.hideVictory();UI.hideBossBar();clearEntities();Player.destroy();scene.background=new THREE.Color(0x0a0500);UI.showMenu()}
+  function exitToMenu(){state='menu';Audio.stopMusic();UI.hideHUD();UI.hidePause();UI.hideGameOver();UI.hideVictory();UI.hideBossBar();clearEntities();Player.destroy();Touch.disable();scene.background=new THREE.Color(0x0a0500);UI.showMenu()}
   function gameOver(){state='gameover';Audio.stopMusic();UI.hideHUD();UI.showGameOver(score)}
   function onBossDefeated(){Audio.playSFX('levelComplete');score+=5000;UI.updateScore(score);setTimeout(()=>{if(curLvl<LEVELS.length-1)loadLevel(curLvl+1);else{state='victory';Audio.stopMusic();UI.hideHUD();UI.showVictory(score)}},2000)}
   function addScore(s){score+=s;UI.updateScore(score)}
