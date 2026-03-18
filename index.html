@@ -61,6 +61,77 @@
   .game-over-text { font-family: 'Cinzel Decorative', serif; font-size: 56px; color: #e74c3c; text-shadow: 0 0 40px #e74c3c66; }
   .victory-text { font-family: 'Cinzel Decorative', serif; font-size: 56px; color: #f4c542; text-shadow: 0 0 40px #f4c54266; }
   .final-score { font-family: 'Reem Kufi Fun', sans-serif; font-size: 20px; color: #d4a853; letter-spacing: 4px; }
+
+  /* ── CELEBRATION SCREEN ── */
+  #celebrationScreen {
+    position: fixed; inset: 0; z-index: 250; display: none;
+    background: #000;
+  }
+  #celebrationScreen.active { display: block; }
+  #celebCanvas { width: 100%; height: 100%; display: block; }
+  .celeb-overlay {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start; pointer-events: none;
+    padding-top: 5vh;
+  }
+  .celeb-title {
+    font-family: 'Cinzel Decorative', serif; font-weight: 900;
+    font-size: clamp(28px, 6vw, 64px); color: #f4c542;
+    text-shadow: 0 0 60px #f4c54288, 0 4px 0 #8b6914, 0 0 120px #f4c54244;
+    animation: celebPulse 2s ease-in-out infinite;
+    letter-spacing: 4px;
+  }
+  @keyframes celebPulse {
+    0%,100% { text-shadow: 0 0 60px #f4c54288, 0 4px 0 #8b6914; transform: scale(1); }
+    50% { text-shadow: 0 0 100px #f4c542cc, 0 4px 0 #8b6914, 0 0 160px #f4c54266; transform: scale(1.03); }
+  }
+  .celeb-subtitle {
+    font-family: 'Reem Kufi Fun', sans-serif; font-size: clamp(12px, 2.5vw, 22px);
+    color: #e6a817; letter-spacing: 6px; margin-top: 4px;
+    text-shadow: 0 0 20px #e6a81744;
+  }
+  .celeb-score {
+    font-family: 'Cinzel Decorative', serif; font-size: clamp(18px, 4vw, 36px);
+    color: #f4c542; margin-top: 12px; letter-spacing: 3px;
+    text-shadow: 0 0 30px #f4c54244;
+  }
+  .celeb-credits {
+    position: absolute; bottom: 0; width: 100%; text-align: center;
+    animation: creditsScroll 20s linear infinite;
+  }
+  @keyframes creditsScroll {
+    0% { transform: translateY(100vh); }
+    100% { transform: translateY(-200%); }
+  }
+  .celeb-credits p {
+    font-family: 'Reem Kufi Fun', sans-serif; color: #d4a85388;
+    font-size: 14px; line-height: 2.2; letter-spacing: 2px;
+  }
+  .celeb-credits .credit-heading {
+    color: #f4c54288; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 5px; margin-top: 24px;
+  }
+  .celeb-credits .credit-name { color: #d4a853cc; font-size: 16px; }
+
+  .celeb-menu-btn {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    font-family: 'Reem Kufi Fun', sans-serif; font-size: 16px;
+    color: #f4c542; background: #f4c54215; border: 1px solid #f4c54244;
+    padding: 10px 40px; cursor: pointer; letter-spacing: 3px;
+    pointer-events: auto; z-index: 10; text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .celeb-menu-btn:hover { background: #f4c54233; border-color: #f4c542; }
+
+  /* Firework particles */
+  .firework {
+    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+    pointer-events: none; animation: fireworkBurst 1.5s ease-out forwards;
+  }
+  @keyframes fireworkBurst {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0) translateY(-40px); }
+  }
   #powerUpNotif { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cinzel Decorative', serif; font-size: 28px; color: #2ecc71; text-shadow: 0 0 30px #2ecc7166; z-index: 120; pointer-events: none; opacity: 0; transition: opacity 0.3s, transform 0.3s; }
   #powerUpNotif.active { opacity: 1; transform: translate(-50%, -70%); }
 
@@ -161,6 +232,45 @@
 <div id="levelIntro"><div class="level-num" id="introLevelNum">Level 1</div><div class="level-name" id="introLevelName">Desert Bazaar</div><div class="boss-intro" id="introBossName">Boss: The Tea Merchant</div></div>
 <div id="gameOverScreen"><div class="game-over-text">DEFEATED</div><div class="final-score" id="goScore">Score: 0</div><div class="menu-buttons" style="margin-top:20px"><button class="menu-btn" onclick="Game.restartLevel()">Try Again</button><button class="menu-btn" onclick="Game.exitToMenu()">Main Menu</button></div></div>
 <div id="victoryScreen"><div class="victory-text">VICTORY!</div><div class="final-score" id="vicScore">Final Score: 0</div><div class="menu-buttons" style="margin-top:20px"><button class="menu-btn" onclick="Game.exitToMenu()">Main Menu</button></div></div>
+
+<!-- CELEBRATION SCREEN -->
+<div id="celebrationScreen">
+  <canvas id="celebCanvas"></canvas>
+  <div class="celeb-overlay">
+    <div class="celeb-title">VICTORY!</div>
+    <div class="celeb-subtitle">The Golden Sultan Has Fallen</div>
+    <div class="celeb-score" id="celebScore">Final Score: 0</div>
+    <div class="celeb-credits">
+      <p class="credit-heading">— The Legend of Maza Baba —</p>
+      <p class="credit-name">The chaos is vanquished.</p>
+      <p class="credit-name">The five worlds are at peace.</p>
+      <p>&nbsp;</p>
+      <p class="credit-heading">Game Design & Development</p>
+      <p class="credit-name">Claude & Kevin</p>
+      <p class="credit-heading">Engine</p>
+      <p class="credit-name">Three.js WebGL</p>
+      <p class="credit-heading">Audio</p>
+      <p class="credit-name">Procedural Web Audio API</p>
+      <p class="credit-name">Turkish Hijaz Scale</p>
+      <p class="credit-heading">Character Design</p>
+      <p class="credit-name">Maza Baba — Legendary Turkish Destroyer</p>
+      <p class="credit-name">Gap-Toothed Grin &bull; Loyal Pigeons &bull; Holy Prayer Beads</p>
+      <p class="credit-heading">Worlds</p>
+      <p class="credit-name">Desert Bazaar &bull; Ancient Ruins</p>
+      <p class="credit-name">Mountain Fortress &bull; Sky Palace</p>
+      <p class="credit-name">Sultan's Throne World</p>
+      <p class="credit-heading">Special Thanks</p>
+      <p class="credit-name">The Pigeons — For their loyal service</p>
+      <p class="credit-name">The Flying Carpet — For never letting us down</p>
+      <p class="credit-name">You — For playing</p>
+      <p>&nbsp;</p>
+      <p class="credit-heading">MAZA BABA: CARPET OF CHAOS</p>
+      <p class="credit-name">2026</p>
+      <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+    </div>
+  </div>
+  <button class="celeb-menu-btn" onclick="Celebration.end();Game.exitToMenu()">Main Menu</button>
+</div>
 <div id="powerUpNotif"></div>
 
 <!-- Touch Controls (mobile) -->
@@ -347,7 +457,7 @@ const LEVELS=[
   {name:'Ancient Ruins',num:2,skyTop:0x665544,skyBot:0x887766,fogColor:0x6b5b3a,fogNear:25,fogFar:120,groundColor:0x8b7355,groundColor2:0x7a6345,ambientColor:0xccaa77,dirColor:0xddbb66,bossName:'The Sand Golem',bossHP:450,waves:5,enemiesPerWave:7,speedMult:1.1},
   {name:'Mountain Fortress',num:3,skyTop:0x6688bb,skyBot:0xccddee,fogColor:0x99aacc,fogNear:20,fogFar:110,groundColor:0x667788,groundColor2:0x556677,ambientColor:0xaaccee,dirColor:0xeeeeff,bossName:'Twin Janissary Guards',bossHP:525,waves:5,enemiesPerWave:8,speedMult:1.15},
   {name:'Sky Palace',num:4,skyTop:0x2255aa,skyBot:0x88bbff,fogColor:0x3377bb,fogNear:40,fogFar:180,groundColor:0xf4c542,groundColor2:0xe6b535,ambientColor:0x88bbff,dirColor:0xffffff,bossName:'The Falcon Rider',bossHP:600,waves:6,enemiesPerWave:8,speedMult:1.2},
-  {name:"Sultan's Throne World",num:5,skyTop:0x110000,skyBot:0x331100,fogColor:0x330000,fogNear:20,fogFar:120,groundColor:0x331111,groundColor2:0x220808,ambientColor:0xff4422,dirColor:0xff8844,bossName:'The Golden Sultan',bossHP:750,waves:7,enemiesPerWave:10,speedMult:1.3},
+  {name:"Sultan's Throne World",num:5,skyTop:0x110000,skyBot:0x331100,fogColor:0x330000,fogNear:20,fogFar:120,groundColor:0x331111,groundColor2:0x220808,ambientColor:0xff4422,dirColor:0xff8844,bossName:'⚔️ ULTRA BOSS: The Golden Sultan ⚔️',bossHP:1200,waves:7,enemiesPerWave:10,speedMult:1.3},
 ];
 
 /* ── SCENE SETUP ── */
@@ -833,15 +943,38 @@ const Enemies=(()=>{
     entities.enemies.push({mesh:g,type:'boss',hp:ld.bossHP,maxHp:ld.bossHP,score:ld.bossHP*10,speed:3,fireRate:.6,fireTimer:1,pattern:'boss',pt:0,isBoss:true});
     Audio.playSFX('bossRoar');UI.showBossBar(ld.bossName,1)}
   function update(dt){const pp=Player.getPos();const tsMult=Player.getTimeSlow();for(let i=entities.enemies.length-1;i>=0;i--){const e=entities.enemies[i];e.pt+=dt*tsMult;
-    if(e.isBoss){if(e.mesh.position.z<-10)e.mesh.position.z+=6*dt;else{e.mesh.position.x=Math.sin(e.pt*.7)*7;e.mesh.position.y=4+Math.sin(e.pt*.4)*2.5;e.mesh.rotation.y=Math.sin(e.pt*.3)*.15}}
+    if(e.isBoss){
+      const isUltra=e.maxHp>=1200;
+      const hpPct=e.hp/e.maxHp;
+      // Ultra boss gets faster and more erratic as HP drops
+      const rage=isUltra?(1+1.5*(1-hpPct)):1;
+      if(e.mesh.position.z<-10)e.mesh.position.z+=6*dt;
+      else{
+        e.mesh.position.x=Math.sin(e.pt*.7*rage)*7;
+        e.mesh.position.y=4+Math.sin(e.pt*.4*rage)*2.5;
+        e.mesh.rotation.y=Math.sin(e.pt*.3)*.15;
+        // Ultra boss dashes forward periodically
+        if(isUltra&&Math.sin(e.pt*1.5)>.95)e.mesh.position.z+=3*dt;
+      }
+    }
     else{const s=e.speed*tsMult;switch(e.pattern){case'straight':e.mesh.position.z+=s*dt;break;case'sine':e.mesh.position.z+=s*dt;e.mesh.position.x+=Math.sin(e.pt*3)*5*dt;break;case'dive':e.mesh.position.z+=s*1.5*dt;e.mesh.position.y-=2*dt;break;case'circle':e.mesh.position.z+=s*.5*dt;e.mesh.position.x=Math.sin(e.pt*2)*5;e.mesh.position.y=4+Math.cos(e.pt*2)*2;break}}
     e.fireTimer-=dt*tsMult;if(e.fireTimer<=0&&e.mesh.position.z>-30){e.fireTimer=e.fireRate*(e.isBoss?1:.8+Math.random()*.4);const ep=e.mesh.position;Proj.spawnEnemy(ep.x,ep.y,ep.z,pp.x,pp.y,pp.z);
       if(e.isBoss){
-        // Boss fires 5-spread pattern
+        const isUltra=e.maxHp>=1200;
         Proj.spawnEnemy(ep.x-2,ep.y,ep.z,pp.x,pp.y,pp.z);
         Proj.spawnEnemy(ep.x+2,ep.y,ep.z,pp.x,pp.y,pp.z);
         Proj.spawnEnemy(ep.x-1,ep.y+1,ep.z,pp.x,pp.y,pp.z);
         Proj.spawnEnemy(ep.x+1,ep.y+1,ep.z,pp.x,pp.y,pp.z);
+        if(isUltra){
+          // Ultra boss: extra 3 projectiles + random scatter shots
+          Proj.spawnEnemy(ep.x,ep.y+2,ep.z,pp.x,pp.y+2,pp.z);
+          Proj.spawnEnemy(ep.x-3,ep.y-.5,ep.z,pp.x,pp.y,pp.z);
+          Proj.spawnEnemy(ep.x+3,ep.y-.5,ep.z,pp.x,pp.y,pp.z);
+          // Phase 2: below 50% HP, fires aimed scatter burst
+          if(e.hp/e.maxHp<.5){
+            for(let a=-2;a<=2;a++)Proj.spawnEnemy(ep.x+a*1.5,ep.y,ep.z,pp.x+a*2,pp.y,pp.z);
+          }
+        }
       }}
     if(e.mesh.position.z>20&&!e.isBoss){scene.remove(e.mesh);entities.enemies.splice(i,1)}}}
   function damageEnemy(idx,dmg){if(idx<0||idx>=entities.enemies.length)return false;const e=entities.enemies[idx];e.hp-=dmg;
@@ -1020,6 +1153,231 @@ const Waves=(()=>{let cw=0,tw=0,st=0,es=0,epw=0,bs=false,wd=2,li=0,wa=false;
   return{init,update,isComplete}
 })();
 
+/* ── CELEBRATION SCREEN (3D character showcase + credits) ── */
+const Celebration=(()=>{
+  let active=false;
+  let celebScene,celebCamera,celebRenderer,celebChar,celebClock;
+  let fireworkInterval=null;
+  let pigeonObjs=[];
+
+  function start(finalScore){
+    active=true;
+    const screen=document.getElementById('celebrationScreen');
+    screen.classList.add('active');
+    document.getElementById('celebScore').textContent='Final Score: '+finalScore.toLocaleString();
+
+    // Create celebration 3D scene
+    const canvas=document.getElementById('celebCanvas');
+    celebScene=new THREE.Scene();
+    celebScene.background=new THREE.Color(0x0a0500);
+    celebScene.fog=new THREE.Fog(0x0a0500,15,40);
+
+    celebCamera=new THREE.PerspectiveCamera(50,canvas.clientWidth/canvas.clientHeight,.1,100);
+    celebCamera.position.set(0,3,7);
+    celebCamera.lookAt(0,1.5,0);
+
+    celebRenderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+    celebRenderer.setSize(canvas.clientWidth,canvas.clientHeight);
+    celebRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    celebRenderer.toneMapping=THREE.ACESFilmicToneMapping;
+    celebRenderer.toneMappingExposure=1.3;
+
+    // Lighting — dramatic spotlight on character
+    celebScene.add(new THREE.AmbientLight(0xf4c542,.2));
+    const spot=new THREE.SpotLight(0xffeedd,1.5,20,Math.PI/4,.5);
+    spot.position.set(3,8,5);spot.castShadow=true;
+    spot.target.position.set(0,1,0);
+    celebScene.add(spot);celebScene.add(spot.target);
+    const rim=new THREE.DirectionalLight(0x4488ff,.5);rim.position.set(-5,3,-3);celebScene.add(rim);
+    const fill=new THREE.DirectionalLight(0xff8844,.3);fill.position.set(2,1,4);celebScene.add(fill);
+
+    // Ground platform — ornate golden disc
+    const platGeo=new THREE.CylinderGeometry(3,3.2,.15,24);
+    const platMat=new THREE.MeshPhongMaterial({color:0xf4c542,shininess:80,emissive:0x221100});
+    const plat=new THREE.Mesh(platGeo,platMat);plat.position.y=-.1;celebScene.add(plat);
+    // Platform rings
+    const ring1=new THREE.Mesh(new THREE.TorusGeometry(2.8,.04,8,48),new THREE.MeshPhongMaterial({color:0xf4c542,emissive:0x332200}));
+    ring1.rotation.x=Math.PI/2;ring1.position.y=.02;celebScene.add(ring1);
+    const ring2=new THREE.Mesh(new THREE.TorusGeometry(2,.03,8,48),new THREE.MeshPhongMaterial({color:0xe74c3c,emissive:0x331111}));
+    ring2.rotation.x=Math.PI/2;ring2.position.y=.03;celebScene.add(ring2);
+
+    // Build the full Maza Baba character (reuse Player's design but at full display scale)
+    celebChar=buildShowcaseCharacter();
+    celebChar.position.set(0,.1,0);
+    celebScene.add(celebChar);
+
+    // Floating pigeons circling the character
+    pigeonObjs=[];
+    for(let i=0;i<6;i++){
+      const p=buildMiniPigeon();
+      p.userData={angle:i/6*Math.PI*2,speed:.5+Math.random()*.3,radius:3.5+Math.random(),height:3+Math.random()*2,wingT:Math.random()*10};
+      celebScene.add(p);
+      pigeonObjs.push(p);
+    }
+
+    // Floating particle sparkles
+    for(let i=0;i<40;i++){
+      const spark=new THREE.Mesh(
+        new THREE.SphereGeometry(.03,4,4),
+        new THREE.MeshBasicMaterial({color:[0xf4c542,0xff6622,0x44ddaa,0xff4466][i%4]})
+      );
+      spark.position.set((Math.random()-.5)*8,Math.random()*6,(Math.random()-.5)*8);
+      spark.userData={vy:.5+Math.random()*.5,baseY:spark.position.y,t:Math.random()*10};
+      celebScene.add(spark);
+      pigeonObjs.push(spark); // reuse array for updates
+    }
+
+    celebClock=new THREE.Clock();
+
+    // Play victory fanfare music
+    Audio.stopMusic();
+    playVictoryMusic();
+
+    // HTML fireworks
+    fireworkInterval=setInterval(spawnFirework,400);
+
+    // Animation loop
+    animateCelebration();
+  }
+
+  function buildShowcaseCharacter(){
+    const g=new THREE.Group();
+    // Carpet
+    const carpet=new THREE.Mesh(new THREE.BoxGeometry(2.6,.06,3.4),M.carpet);
+    for(let z of[-1.68,1.68])carpet.add(P(new THREE.Mesh(new THREE.BoxGeometry(2.7,.08,.12),M.carpetGold),0,.01,z));
+    for(let x of[-1.32,1.32])carpet.add(P(new THREE.Mesh(new THREE.BoxGeometry(.1,.08,3.5),M.carpetGold),x,.01,0));
+    carpet.add(P(new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,.02,8),M.carpetGold),0,.04,0));
+    g.add(carpet);
+    // Body
+    const torso=new THREE.Mesh(new THREE.CylinderGeometry(.38,.48,.9,8),M.robe);torso.position.set(0,.6,.05);g.add(torso);
+    const sash=new THREE.Mesh(new THREE.CylinderGeometry(.42,.44,.1,8),M.robeSash);sash.position.set(0,.45,.05);g.add(sash);
+    for(let s of[-1,1]){const sh=new THREE.Mesh(new THREE.SphereGeometry(.2,8,6),M.robe);sh.position.set(s*.45,1.05,.05);g.add(sh)}
+    for(let s of[-1,1]){const leg=new THREE.Mesh(new THREE.CylinderGeometry(.15,.13,.55,6),M.robe);leg.position.set(s*.18,.15,.25);leg.rotation.z=s*.4;g.add(leg)}
+    // Head
+    const head=new THREE.Mesh(new THREE.SphereGeometry(.38,12,12),M.skin);head.position.set(0,1.55,.1);head.scale.set(1,1.1,.95);g.add(head);
+    const brow=new THREE.Mesh(new THREE.BoxGeometry(.62,.08,.18),M.skinDark);brow.position.set(0,1.77,.4);g.add(brow);
+    // Eyes
+    for(let s of[-1,1]){
+      g.add(P(new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),M.eye),s*.14,1.68,.42));
+      g.add(P(new THREE.Mesh(new THREE.SphereGeometry(.05,8,6),M.eyeWhite),s*.14,1.69,.45));
+      g.add(P(new THREE.Mesh(new THREE.SphereGeometry(.025,6,6),M.eyeIris),s*.14,1.69,.48));
+      g.add(P(new THREE.Mesh(new THREE.BoxGeometry(.14,.035,.05),M.hair),s*.14,1.78,.43));
+    }
+    // Nose
+    g.add(P(new THREE.Mesh(new THREE.BoxGeometry(.08,.18,.12),M.skin),0,1.6,.45));
+    g.add(P(new THREE.Mesh(new THREE.SphereGeometry(.055,6,6),M.noseTip),0,1.53,.5));
+    // BIG GRIN
+    g.add(P(new THREE.Mesh(new THREE.BoxGeometry(.34,.13,.06),new THREE.MeshPhongMaterial({color:0x1a0000})),0,1.42,.44));
+    [-.12,-.08,-.045,.045,.08,.12].forEach(tx=>g.add(P(new THREE.Mesh(new THREE.BoxGeometry(.03,.045,.035),M.teeth),tx,1.45,.46)));
+    g.add(P(new THREE.Mesh(new THREE.BoxGeometry(.36,.025,.05),M.skinDark),0,1.49,.45));
+    g.add(P(new THREE.Mesh(new THREE.BoxGeometry(.32,.035,.05),M.skinDark),0,1.36,.44));
+    // Stubble
+    const jaw=new THREE.Mesh(new THREE.SphereGeometry(.35,8,6),M.stubble);jaw.position.set(0,1.38,.08);jaw.scale.set(1.1,.65,1);g.add(jaw);
+    // Hair
+    const hair=new THREE.Mesh(new THREE.SphereGeometry(.4,10,8),M.hair);hair.position.set(0,1.7,0);hair.scale.set(1,.45,1);g.add(hair);
+    // Ears
+    for(let s of[-1,1])g.add(P(S(new THREE.Mesh(new THREE.SphereGeometry(.08,6,6),M.skin),.4,.9,.7),s*.4,1.55,.05));
+    // Arms raised in victory!
+    for(let s of[-1,1]){
+      const arm=new THREE.Mesh(new THREE.CylinderGeometry(.08,.07,.45,6),M.robe);
+      arm.position.set(s*.5,1.3,.0);arm.rotation.z=s*-.8;arm.rotation.x=-.2;g.add(arm);
+      const forearm=new THREE.Mesh(new THREE.CylinderGeometry(.06,.055,.4,6),M.skin);
+      forearm.position.set(s*.75,1.7,-.05);forearm.rotation.z=s*-.3;g.add(forearm);
+      const hand=new THREE.Mesh(new THREE.SphereGeometry(.06,6,6),M.skin);
+      hand.position.set(s*.85,2,.0);g.add(hand);
+    }
+    // Gold chain
+    const chain=new THREE.Mesh(new THREE.TorusGeometry(.2,.01,6,12),M.carpetGold);
+    chain.position.set(0,1.1,.12);chain.rotation.x=Math.PI/2.5;g.add(chain);
+
+    g.scale.set(.8,.8,.8);
+    return g;
+  }
+
+  function buildMiniPigeon(){
+    const g=new THREE.Group();
+    g.add(S(new THREE.Mesh(new THREE.SphereGeometry(.15,6,6),M.pigeonBody),.8,.7,1.2));
+    g.add(P(new THREE.Mesh(new THREE.SphereGeometry(.08,6,6),M.pigeonBody),0,.1,-.15));
+    for(let s of[-1,1]){const w=new THREE.Mesh(new THREE.BoxGeometry(.3,.03,.2),M.pigeonWing);w.position.set(s*.25,.03,0);w.name='wing';g.add(w)}
+    return g;
+  }
+
+  function spawnFirework(){
+    const screen=document.getElementById('celebrationScreen');
+    const cx=Math.random()*innerWidth,cy=Math.random()*innerHeight*.6;
+    const colors=['#f4c542','#e74c3c','#44ddaa','#ff6622','#4488ff','#ff44aa'];
+    const col=colors[Math.floor(Math.random()*colors.length)];
+    for(let i=0;i<12;i++){
+      const p=document.createElement('div');p.className='firework';
+      p.style.left=cx+'px';p.style.top=cy+'px';p.style.background=col;
+      const a=i/12*Math.PI*2,r=30+Math.random()*50;
+      p.style.transform=`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px)`;
+      p.style.animationDelay=(Math.random()*.2)+'s';
+      screen.appendChild(p);
+      setTimeout(()=>p.remove(),2000);
+    }
+  }
+
+  function playVictoryMusic(){
+    Audio.ensure();
+    // Triumphant ascending melody
+    const notes=[392,440,523,587,659,784,880,1047];
+    notes.forEach((f,i)=>Audio.playSFX('powerup')); // Burst of chimes
+    setTimeout(()=>Audio.playSFX('levelComplete'),500);
+    setTimeout(()=>Audio.playSFX('levelComplete'),2000);
+  }
+
+  function animateCelebration(){
+    if(!active)return;
+    requestAnimationFrame(animateCelebration);
+    const dt=celebClock.getDelta();
+    const t=celebClock.elapsedTime;
+
+    // Rotate character slowly
+    if(celebChar){
+      celebChar.rotation.y=t*.3;
+      celebChar.position.y=.1+Math.sin(t*.8)*.15; // gentle bob
+    }
+
+    // Animate pigeons circling
+    pigeonObjs.forEach(p=>{
+      if(p.userData.angle!==undefined){
+        p.userData.angle+=dt*p.userData.speed;
+        p.position.x=Math.cos(p.userData.angle)*p.userData.radius;
+        p.position.z=Math.sin(p.userData.angle)*p.userData.radius;
+        p.position.y=p.userData.height+Math.sin(t*2+p.userData.angle)*.3;
+        p.rotation.y=-p.userData.angle+Math.PI/2;
+        p.userData.wingT+=dt*12;
+        p.children.forEach(c=>{if(c.name==='wing')c.rotation.z=Math.sin(p.userData.wingT)*.5});
+      } else if(p.userData.vy){
+        // Sparkle particle
+        p.userData.t+=dt;
+        p.position.y=p.userData.baseY+Math.sin(p.userData.t*p.userData.vy*2)*1.5;
+        p.rotation.x+=dt*2;p.rotation.y+=dt*3;
+      }
+    });
+
+    // Camera gentle sway
+    celebCamera.position.x=Math.sin(t*.2)*1.5;
+    celebCamera.position.y=3+Math.sin(t*.15)*.5;
+    celebCamera.lookAt(0,1.5,0);
+
+    celebRenderer.render(celebScene,celebCamera);
+  }
+
+  function end(){
+    active=false;
+    if(fireworkInterval){clearInterval(fireworkInterval);fireworkInterval=null}
+    document.getElementById('celebrationScreen').classList.remove('active');
+    // Clean up
+    if(celebRenderer){celebRenderer.dispose()}
+    celebScene=null;celebCamera=null;celebRenderer=null;celebChar=null;
+    pigeonObjs=[];
+  }
+
+  return{start,end};
+})();
+
 /* ── GAME MANAGER ── */
 const Game=(()=>{let state='menu',score=0,curLvl=0,speedMult=1;
   function init(){initRenderer();UI.showMenu();scene.background=new THREE.Color(0x0a0500);scene.add(new THREE.AmbientLight(0xf4c542,.3));gameLoop()}
@@ -1028,9 +1386,9 @@ const Game=(()=>{let state='menu',score=0,curLvl=0,speedMult=1;
   function pause(){if(state!=='playing')return;state='paused';UI.showPause()}
   function resume(){if(state!=='paused')return;state='playing';UI.hidePause();Input.consumePause()}
   function restartLevel(){UI.hideGameOver();UI.hidePause();score=Math.max(0,score-1000);loadLevel(curLvl)}
-  function exitToMenu(){state='menu';Audio.stopMusic();UI.hideHUD();UI.hidePause();UI.hideGameOver();UI.hideVictory();UI.hideBossBar();clearEntities();Player.destroy();Touch.disable();scene.background=new THREE.Color(0x0a0500);UI.showMenu()}
+  function exitToMenu(){state='menu';Audio.stopMusic();UI.hideHUD();UI.hidePause();UI.hideGameOver();UI.hideVictory();UI.hideBossBar();Celebration.end();clearEntities();Player.destroy();Touch.disable();scene.background=new THREE.Color(0x0a0500);UI.showMenu()}
   function gameOver(){state='gameover';Audio.stopMusic();UI.hideHUD();UI.showGameOver(score)}
-  function onBossDefeated(){Audio.playSFX('levelComplete');score+=5000;UI.updateScore(score);setTimeout(()=>{if(curLvl<LEVELS.length-1)loadLevel(curLvl+1);else{state='victory';Audio.stopMusic();UI.hideHUD();UI.showVictory(score)}},2000)}
+  function onBossDefeated(){Audio.playSFX('levelComplete');score+=5000;UI.updateScore(score);setTimeout(()=>{if(curLvl<LEVELS.length-1)loadLevel(curLvl+1);else{state='victory';Audio.stopMusic();UI.hideHUD();Touch.disable();Celebration.start(score)}},2000)}
   function addScore(s){score+=s;UI.updateScore(score)}
   function getSpeedMult(){return speedMult}
   function gameLoop(){requestAnimationFrame(gameLoop);const dt=Math.min(clock.getDelta(),.05);
